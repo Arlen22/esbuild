@@ -1,6 +1,6 @@
 {
   "name": "@esbuild-try-operator-proposal/linux-riscv64",
-  "version": "0.25.2-0.0.1",
+  "version": "0.25.2-0.0.3",
   "description": "The Linux RISC-V 64-bit binary for esbuild, a JavaScript bundler.",
   "repository": {
     "type": "git",
