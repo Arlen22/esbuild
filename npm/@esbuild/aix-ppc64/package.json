@@ -1,6 +1,6 @@
 {
   "name": "@esbuild-try-operator-proposal/aix-ppc64",
-  "version": "0.25.2-0.0.3",
+  "version": "0.25.2-0.0.4",
   "description": "The IBM AIX PowerPC 64-bit binary for esbuild, a JavaScript bundler.",
   "repository": {
     "type": "git",
