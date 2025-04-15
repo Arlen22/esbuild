@@ -1,6 +1,6 @@
 {
   "name": "@esbuild-try-operator-proposal/sunos-x64",
-  "version": "0.25.2-0.0.5",
+  "version": "0.25.2-0.0.6",
   "description": "The illumos 64-bit binary for esbuild, a JavaScript bundler.",
   "repository": {
     "type": "git",
