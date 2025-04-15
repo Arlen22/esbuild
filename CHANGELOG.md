@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.25.2-0.0.4
+
+* Another attempt.
+
 ## 0.25.2-0.0.3
 
 * Fix some more things in the package process.

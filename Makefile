@@ -317,26 +317,26 @@ platform-all:
 
 platform-win32-x64: version-go
 	node scripts/esbuild.js npm/@esbuild/win32-x64/package.json --version
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build $(GO_FLAGS) -o npm/@esbuild/win32-x64/esbuild.exe ./cmd/esbuild
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build $(GO_FLAGS) -o npm/@esbuild/win32-x64/esbuild-try-operator-proposal.exe ./cmd/esbuild
 
 platform-win32-ia32: version-go
 	node scripts/esbuild.js npm/@esbuild/win32-ia32/package.json --version
-	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build $(GO_FLAGS) -o npm/@esbuild/win32-ia32/esbuild.exe ./cmd/esbuild
+	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build $(GO_FLAGS) -o npm/@esbuild/win32-ia32/esbuild-try-operator-proposal.exe ./cmd/esbuild
 
 platform-win32-arm64: version-go
 	node scripts/esbuild.js npm/@esbuild/win32-arm64/package.json --version
-	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build $(GO_FLAGS) -o npm/@esbuild/win32-arm64/esbuild.exe ./cmd/esbuild
+	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build $(GO_FLAGS) -o npm/@esbuild/win32-arm64/esbuild-try-operator-proposal.exe ./cmd/esbuild
 
 platform-wasi-preview1: version-go
 	node scripts/esbuild.js npm/@esbuild/wasi-preview1/package.json --version
-	CGO_ENABLED=0 GOOS=wasip1 GOARCH=wasm go build $(GO_FLAGS) -o npm/@esbuild/wasi-preview1/esbuild.wasm ./cmd/esbuild
+	CGO_ENABLED=0 GOOS=wasip1 GOARCH=wasm go build $(GO_FLAGS) -o npm/@esbuild/wasi-preview1/esbuild-try-operator-proposal.wasm ./cmd/esbuild
 
 platform-unixlike: version-go
 	@test -n "$(GOOS)" || (echo "The environment variable GOOS must be provided" && false)
 	@test -n "$(GOARCH)" || (echo "The environment variable GOARCH must be provided" && false)
 	@test -n "$(NPMDIR)" || (echo "The environment variable NPMDIR must be provided" && false)
 	node scripts/esbuild.js "$(NPMDIR)/package.json" --version
-	CGO_ENABLED=0 GOOS="$(GOOS)" GOARCH="$(GOARCH)" go build $(GO_FLAGS) -o "$(NPMDIR)/bin/esbuild" ./cmd/esbuild
+	CGO_ENABLED=0 GOOS="$(GOOS)" GOARCH="$(GOARCH)" go build $(GO_FLAGS) -o "$(NPMDIR)/bin/esbuild-try-operator-proposal" ./cmd/esbuild
 
 platform-android-x64: platform-wasm
 	node scripts/esbuild.js npm/@esbuild/android-x64/package.json --version
