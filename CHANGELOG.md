@@ -1,19 +1,11 @@
 # Changelog
+## 0.25.2-0.0.6
 
-## 0.25.2-0.0.5
+* Forgot the return value in helper function body.
 
-* Another attempt.
+## 0.25.2-0.0.1 to 0.25.2-0.0.5
 
-## 0.25.2-0.0.4
-
-* Another attempt.
-
-## 0.25.2-0.0.3
-
-* Fix some more things in the package process.
-
-## 0.25.2-0.0.1
-
+* Trying to figure out how to properly rename the package.
 * Implement try operator transformation with down-level support.
 
 ## 0.25.2
