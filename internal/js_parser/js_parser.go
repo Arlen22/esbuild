@@ -40,6 +40,7 @@ type parser struct {
 	tracker                    logger.LineColumnTracker
 	fnOrArrowDataParse         fnOrArrowDataParse
 	fnOnlyDataVisit            fnOnlyDataVisit
+	tryExprParse               tryExprParse
 	allocatedNames             []string
 	currentScope               *js_ast.Scope
 	scopesForCurrentPart       []*js_ast.Scope
@@ -680,6 +681,11 @@ type fnOrArrowDataVisit struct {
 	isDerivedClassCtor             bool
 	isOutsideFnOrArrow             bool
 	shouldLowerSuperPropertyAccess bool
+}
+
+type tryExprParse struct {
+	hasAwait bool
+	hasYield bool
 }
 
 // This is function-specific information used during visiting. It is saved and
@@ -3563,6 +3569,7 @@ func (p *parser) parsePrefix(level js_ast.L, errors *deferredErrors, flags exprF
 					if p.lexer.Token == js_lexer.TAsteriskAsterisk {
 						p.lexer.Unexpected()
 					}
+					p.tryExprParse.hasAwait = true
 					return js_ast.Expr{Loc: loc, Data: &js_ast.EAwait{Value: value}}
 				}
 
@@ -3618,6 +3625,34 @@ func (p *parser) parsePrefix(level js_ast.L, errors *deferredErrors, flags exprF
 
 		ref := p.storeNameInRef(name)
 		return js_ast.Expr{Loc: loc, Data: &js_ast.EIdentifier{Ref: ref}}
+
+	case js_lexer.TTry:
+		p.lexer.Next()
+		if p.lexer.Token == js_lexer.TOpenBrace {
+			p.lexer.Unexpected()
+		}
+		if level > js_ast.LAssign {
+			p.log.AddError(&p.tracker, p.lexer.Range(), "Cannot use a \"yield\" expression here without parentheses:")
+		}
+		oldtryExprParse := p.tryExprParse
+		p.tryExprParse = tryExprParse{hasAwait: false, hasYield: false}
+		value := p.parseExpr(js_ast.LTry)
+		kind := 0
+		hasAwait := p.tryExprParse.hasAwait
+		hasYield := p.tryExprParse.hasYield
+		if hasAwait {
+			kind += 1
+		}
+		if hasYield {
+			kind += 2
+		}
+		p.tryExprParse = oldtryExprParse
+		return js_ast.Expr{Loc: loc, Data: &js_ast.ETry{
+			Value:    value,
+			Kind:     js_ast.TryExprKind(kind),
+			HasAwait: hasAwait,
+			HasYield: hasYield,
+		}}
 
 	case js_lexer.TStringLiteral, js_lexer.TNoSubstitutionTemplateLiteral:
 		return p.parseStringLiteral()
@@ -4069,6 +4104,8 @@ func (p *parser) parseYieldExpr(loc logger.Loc) js_ast.Expr {
 			}
 		}
 	}
+
+	p.tryExprParse.hasYield = true
 
 	return js_ast.Expr{Loc: loc, Data: &js_ast.EYield{ValueOrNil: valueOrNil, IsStar: isStar}}
 }
@@ -9568,6 +9605,12 @@ func (p *parser) substituteSingleUseSymbolInExpr(
 			}
 		}
 
+	case *js_ast.ETry:
+		if value, status := p.substituteSingleUseSymbolInExpr(e.Value, ref, replacement, replacementCanBeRemoved); status != substituteContinue {
+			e.Value = value
+			return expr, status
+		}
+
 	case *js_ast.EImportCall:
 		if value, status := p.substituteSingleUseSymbolInExpr(e.Expr, ref, replacement, replacementCanBeRemoved); status != substituteContinue {
 			e.Expr = value
@@ -14429,6 +14472,10 @@ func (p *parser) visitExprInOut(expr js_ast.Expr, in exprIn) (js_ast.Expr, exprO
 		if e.IsStar && p.options.unsupportedJSFeatures.Has(compat.AsyncGenerator) && p.fnOrArrowDataVisit.isGenerator {
 			e.ValueOrNil = p.callRuntime(expr.Loc, "__yieldStar", []js_ast.Expr{e.ValueOrNil})
 		}
+
+	case *js_ast.ETry:
+		e.Value = p.visitExpr(e.Value)
+		return p.maybeLowerTryExpression(expr.Loc, e), exprOut{}
 
 	case *js_ast.EArray:
 		if in.assignTarget != js_ast.AssignTargetNone {

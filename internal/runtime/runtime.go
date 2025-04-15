@@ -78,6 +78,27 @@ func Source(unsupportedJSFeatures compat.JSFeature) logger.Source {
 		var __knownSymbol = (name, symbol) => (symbol = Symbol[name]) ? symbol : Symbol.for('Symbol.' + name)
 		var __typeError = msg => { throw TypeError(msg) }
 
+		
+
+		export var TryResult = /** @class */ (function () {
+			function TryResult(ok, error, value) {
+					this.ok = ok;
+					this.error = error;
+					this.value = value;
+			}
+			TryResult.prototype[Symbol.iterator] = function () {
+					return [this.ok, this.error, this.value].values();
+			};
+
+			return TryResult;
+		}());
+		export var TryResultOk = function (value) {
+			return new TryResult(true, undefined, value);
+		};
+		export var TryResultError = function (error) {
+			return new TryResult(false, error, undefined);
+		};
+
 		export var __pow = Math.pow
 
 		var __defNormalProp = (obj, key, value) => key in obj
@@ -89,6 +110,8 @@ func Source(unsupportedJSFeatures compat.JSFeature) logger.Source {
 				if (__hasOwnProp.call(b, prop))
 					__defNormalProp(a, prop, b[prop])
 			if (__getOwnPropSymbols)
+
+
 		`
 
 	// Avoid "of" when not using ES6

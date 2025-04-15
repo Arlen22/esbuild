@@ -30,6 +30,7 @@ const (
 	LComma
 	LSpread
 	LYield
+	LTry
 	LAssign
 	LConditional
 	LNullishCoalescing
@@ -49,6 +50,15 @@ const (
 	LNew
 	LCall
 	LMember
+)
+
+type TryExprKind uint8
+
+const (
+	TryExprKindBasic TryExprKind = iota
+	TryExprKindAwait
+	TryExprKindYield
+	TryExprKindYieldAwait
 )
 
 type OpCode uint8
@@ -487,6 +497,7 @@ func (*EInlinedEnum) isExpr()          {}
 func (*EAnnotation) isExpr()           {}
 func (*EAwait) isExpr()                {}
 func (*EYield) isExpr()                {}
+func (*ETry) isExpr()                  {}
 func (*EIf) isExpr()                   {}
 func (*ERequireString) isExpr()        {}
 func (*ERequireResolveString) isExpr() {}
@@ -893,6 +904,13 @@ type EAwait struct {
 type EYield struct {
 	ValueOrNil Expr
 	IsStar     bool
+}
+
+type ETry struct {
+	Kind     TryExprKind
+	Value    Expr
+	HasAwait bool
+	HasYield bool
 }
 
 type EIf struct {

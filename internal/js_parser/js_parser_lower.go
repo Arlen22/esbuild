@@ -1033,6 +1033,155 @@ func (p *parser) lowerObjectSpread(loc logger.Loc, e *js_ast.EObject) js_ast.Exp
 	return result
 }
 
+func (p *parser) maybeLowerTryExpression(loc logger.Loc, e *js_ast.ETry) js_ast.Expr {
+	// blocks :=
+	// function() { try { return TryResult.ok(expression); } catch(e) { return TryResult.error(e); } }.call(this);
+	// await async function() { try { return TryResult.ok(await expression); } catch(e) { return TryResult.error(e); } }.call(this);
+	// yield* function*() { try { return TryResult.ok(yield expression); } catch(e) { return TryResult.error(e); } }.call(this);
+	// yield* async function*() { try { return TryResult.ok(yield await expression); } catch(e) { return TryResult.error(e); } }.call(this);
+	// errorRef := p.generateTempRef(tempRefNoDeclare, "error")
+	errorRef := p.newSymbol(ast.SymbolOther, "error")
+
+	fn := js_ast.Fn{
+		// Args:         e.Args,
+		// Body:         e.Body,
+		// ArgumentsRef: ast.InvalidRef,
+		// IsAsync:      e.IsAsync,
+		// HasRestArg:   e.HasRestArg,
+		// ArgumentsRef: ast.InvalidRef,
+		IsGenerator: e.HasYield,
+		IsAsync:     e.HasAwait,
+		// HasRestArg:   false,
+		Body: js_ast.FnBody{Block: js_ast.SBlock{Stmts: []js_ast.Stmt{
+			{Loc: loc, Data: &js_ast.STry{
+				BlockLoc: loc,
+				Block: js_ast.SBlock{
+					Stmts: []js_ast.Stmt{
+						{Loc: loc, Data: &js_ast.SExpr{
+							Value: p.callRuntime(loc, "TryResultOk", []js_ast.Expr{
+								e.Value,
+							}),
+						}},
+					},
+				},
+				Catch: &js_ast.Catch{
+					Loc: loc,
+					BindingOrNil: js_ast.Binding{
+						Loc:  loc,
+						Data: &js_ast.BIdentifier{Ref: errorRef},
+					},
+					Block: js_ast.SBlock{
+						Stmts: []js_ast.Stmt{
+							{Loc: loc, Data: &js_ast.SExpr{
+								Value: p.callRuntime(loc, "TryResultError", []js_ast.Expr{
+									{Loc: loc, Data: &js_ast.EIdentifier{Ref: errorRef}},
+								}),
+							}},
+						},
+					},
+				},
+			}},
+		}}},
+	}
+
+	// Determine the value for "this"
+	thisValue, hasThisValue := p.valueForThis(
+		loc,
+		false, /* shouldWarn */
+		js_ast.AssignTargetNone,
+		false, /* isCallTarget */
+		false, /* isDeleteTarget */
+	)
+	if !hasThisValue {
+		thisValue = js_ast.Expr{Loc: loc, Data: js_ast.EThisShared}
+	}
+	var value js_ast.Expr
+	// bodyBlock.Stmts = []js_ast.Stmt{{Loc: bodyLoc, Data: &js_ast.SReturn{ValueOrNil: callAsync}}}
+	if e.HasAwait && (p.options.unsupportedJSFeatures.Has(compat.AsyncAwait) || (e.HasYield && p.options.unsupportedJSFeatures.Has(compat.AsyncGenerator))) {
+		fn.IsGenerator = true
+		fn.IsAsync = false
+
+		var name string
+		if e.HasYield {
+			// "async function* foo(a, b) { stmts }" => "function foo(a, b) { return __asyncGenerator(this, null, function* () { stmts }) }"
+			name = "__asyncGenerator"
+		} else {
+			// "async function foo(a, b) { stmts }" => "function foo(a, b) { return __async(this, null, function* () { stmts }) }"
+			name = "__async"
+		}
+
+		items := make([]js_ast.Expr, 0, 0)
+		forwardedArgs := js_ast.Expr{Loc: loc, Data: &js_ast.EArray{Items: items, IsSingleLine: true}}
+
+		callAsync := p.callRuntime(loc, name, []js_ast.Expr{
+			thisValue,
+			forwardedArgs,
+			{Loc: loc, Data: &js_ast.EFunction{Fn: fn}},
+		})
+
+		outer := js_ast.Fn{Body: js_ast.FnBody{
+			Block: js_ast.SBlock{Stmts: []js_ast.Stmt{
+				{Loc: loc, Data: &js_ast.SReturn{ValueOrNil: callAsync}},
+			}},
+		}}
+
+		value = js_ast.Expr{Loc: loc, Data: &js_ast.ECall{
+			Target: js_ast.Expr{Loc: loc, Data: &js_ast.EFunction{Fn: outer}},
+		}}
+	} else {
+		value = js_ast.Expr{Loc: loc, Data: &js_ast.ECall{
+			Target: js_ast.Expr{Loc: loc, Data: &js_ast.EFunction{Fn: fn}},
+		}}
+
+		value = js_ast.Expr{Loc: loc, Data: &js_ast.ECall{
+			Target: js_ast.Expr{Loc: loc, Data: &js_ast.EDot{
+				Target:  js_ast.Expr{Loc: loc, Data: &js_ast.EFunction{Fn: fn}},
+				Name:    "call",
+				NameLoc: loc,
+			}},
+			Args: []js_ast.Expr{
+				{Loc: loc, Data: js_ast.EThisShared},
+			},
+			Kind: js_ast.TargetWasOriginallyPropertyAccess,
+		}}
+
+		// fn.IsGenerator = false
+		// fn.IsAsync = false
+
+		// callAsync := js_ast.Expr{Loc: loc, Data: &js_ast.EFunction{Fn: fn}}
+
+		// return js_ast.Expr{Loc: loc, Data: &js_ast.ECall{
+		// 	Target: js_ast.Expr{Loc: loc, Data: &js_ast.EFunction{Fn: fn}},
+		// 	Args:   []js_ast.Expr{callAsync},
+		// }}
+	}
+	switch e.Kind {
+	case js_ast.TryExprKindBasic:
+		return value
+	case js_ast.TryExprKindAwait:
+		return js_ast.Expr{Loc: loc, Data: &js_ast.EAwait{
+			Value: value,
+		}}
+	case js_ast.TryExprKindYield:
+		fallthrough
+	case js_ast.TryExprKindYieldAwait:
+		return js_ast.Expr{Loc: loc, Data: &js_ast.EYield{
+			ValueOrNil: value,
+			IsStar:     true,
+		}}
+	default:
+		return value
+	}
+	// fnLowered := js_ast.Expr{Data: &js_ast.EFunction{Fn: p.lowerFunction(&fn.IsAsync, &fn.IsGenerator, &fn.Args, fn.Body.Loc, &fn.Body.Block, false, &fn.HasRestArg, false)}}
+
+	// switch e.Kind {
+	// case js_ast.TryExprKindBasic:
+	// 	return
+	// }
+	// return p.lowerFunction(&e.HasAwait, &e.HasYield, &[]js_ast.Arg, loc, blocks, true, false, false)
+
+}
+
 func (p *parser) maybeLowerAwait(loc logger.Loc, e *js_ast.EAwait) js_ast.Expr {
 	// "await x" turns into "yield __await(x)" when lowering async generator functions
 	if p.fnOrArrowDataVisit.isGenerator && (p.options.unsupportedJSFeatures.Has(compat.AsyncAwait) || p.options.unsupportedJSFeatures.Has(compat.AsyncGenerator)) {
