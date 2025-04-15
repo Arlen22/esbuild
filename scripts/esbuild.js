@@ -29,7 +29,7 @@ const buildNeutralLib = (esbuildPath) => {
     // making it seem like esbuild's install script code changes with every
     // esbuild release. So now we read it from "package.json" instead.
     // '--define:ESBUILD_VERSION=' + JSON.stringify(version),
-    '--external:esbuild',
+    '--external:esbuild-try-operator-proposal',
     '--platform=node',
     '--log-level=warning',
   ], { cwd: repoDir })
@@ -42,7 +42,7 @@ const buildNeutralLib = (esbuildPath) => {
     '--target=' + nodeTarget,
     '--define:WASM=false',
     '--define:ESBUILD_VERSION=' + JSON.stringify(version),
-    '--external:esbuild',
+    '--external:esbuild-try-operator-proposal',
     '--platform=node',
     '--log-level=warning',
   ], { cwd: repoDir })
@@ -50,11 +50,11 @@ const buildNeutralLib = (esbuildPath) => {
   // Generate "npm/esbuild/bin/esbuild"
   childProcess.execFileSync(esbuildPath, [
     path.join(repoDir, 'lib', 'npm', 'node-shim.ts'),
-    '--outfile=' + path.join(binDir, 'esbuild'),
+    '--outfile=' + path.join(binDir, 'esbuild-try-operator-proposal'),
     '--bundle',
     '--target=' + nodeTarget,
     '--define:ESBUILD_VERSION=' + JSON.stringify(version),
-    '--external:esbuild',
+    '--external:esbuild-try-operator-proposal',
     '--platform=node',
     '--log-level=warning',
   ], { cwd: repoDir })
@@ -69,7 +69,7 @@ const buildNeutralLib = (esbuildPath) => {
     path.join(repoDir, 'lib', 'npm', 'node-platform.ts'),
     '--bundle',
     '--target=' + nodeTarget,
-    '--external:esbuild',
+    '--external:esbuild-try-operator-proposal',
     '--platform=node',
     '--log-level=warning',
   ], { cwd: repoDir }))(platforms, platforms.exports, require)
@@ -161,7 +161,7 @@ exports.buildWasmLib = async (esbuildPath) => {
     '--format=cjs',
     '--define:WASM=true',
     '--define:ESBUILD_VERSION=' + JSON.stringify(version),
-    '--external:esbuild',
+    '--external:esbuild-try-operator-proposal',
     '--platform=node',
     '--log-level=warning',
   ], { cwd: repoDir })
@@ -217,7 +217,7 @@ exports.buildWasmLib = async (esbuildPath) => {
     fs.mkdirSync(path.join(dir, 'bin'), { recursive: true })
     fs.writeFileSync(path.join(dir, 'wasm_exec.js'), wasm_exec_js)
     fs.writeFileSync(path.join(dir, 'wasm_exec_node.js'), wasm_exec_node_js)
-    fs.copyFileSync(path.join(npmWasmDir, 'bin', 'esbuild'), path.join(dir, 'bin', 'esbuild'))
+    fs.copyFileSync(path.join(npmWasmDir, 'bin', 'esbuild-try-operator-proposal'), path.join(dir, 'bin', 'esbuild-try-operator-proposal'))
     fs.copyFileSync(path.join(npmWasmDir, 'esbuild.wasm'), path.join(dir, 'esbuild.wasm'))
   }
 }

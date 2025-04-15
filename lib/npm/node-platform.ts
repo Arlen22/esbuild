@@ -14,43 +14,43 @@ export var ESBUILD_BINARY_PATH: string | undefined = process.env.ESBUILD_BINARY_
 // breaks all npm installations of esbuild. The unofficial package was fixed
 // after I reached out to them but the old broken packages will still be there
 // forever. Attempt to fix this by ignoring the "/usr/bin/esbuild" value.
-export const isValidBinaryPath = (x: string | undefined): x is string => !!x && x !== '/usr/bin/esbuild'
+export const isValidBinaryPath = (x: string | undefined): x is string => !!x && x !== '/usr/bin/esbuild-try-operator-proposal'
 
-const packageDarwin_arm64 = '@esbuild/darwin-arm64'
-const packageDarwin_x64 = '@esbuild/darwin-x64'
+const packageDarwin_arm64 = '@esbuild-try-operator-proposal/darwin-arm64'
+const packageDarwin_x64 = '@esbuild-try-operator-proposal/darwin-x64'
 
 export const knownWindowsPackages: Record<string, string> = {
-  'win32 arm64 LE': '@esbuild/win32-arm64',
-  'win32 ia32 LE': '@esbuild/win32-ia32',
-  'win32 x64 LE': '@esbuild/win32-x64',
+  'win32 arm64 LE': '@esbuild-try-operator-proposal/win32-arm64',
+  'win32 ia32 LE': '@esbuild-try-operator-proposal/win32-ia32',
+  'win32 x64 LE': '@esbuild-try-operator-proposal/win32-x64',
 }
 
 export const knownUnixlikePackages: Record<string, string> = {
-  'aix ppc64 BE': '@esbuild/aix-ppc64',
-  'android arm64 LE': '@esbuild/android-arm64',
-  'darwin arm64 LE': '@esbuild/darwin-arm64',
-  'darwin x64 LE': '@esbuild/darwin-x64',
-  'freebsd arm64 LE': '@esbuild/freebsd-arm64',
-  'freebsd x64 LE': '@esbuild/freebsd-x64',
-  'linux arm LE': '@esbuild/linux-arm',
-  'linux arm64 LE': '@esbuild/linux-arm64',
-  'linux ia32 LE': '@esbuild/linux-ia32',
-  'linux mips64el LE': '@esbuild/linux-mips64el',
-  'linux ppc64 LE': '@esbuild/linux-ppc64',
-  'linux riscv64 LE': '@esbuild/linux-riscv64',
-  'linux s390x BE': '@esbuild/linux-s390x',
-  'linux x64 LE': '@esbuild/linux-x64',
-  'linux loong64 LE': '@esbuild/linux-loong64',
-  'netbsd arm64 LE': '@esbuild/netbsd-arm64',
-  'netbsd x64 LE': '@esbuild/netbsd-x64',
-  'openbsd arm64 LE': '@esbuild/openbsd-arm64',
-  'openbsd x64 LE': '@esbuild/openbsd-x64',
-  'sunos x64 LE': '@esbuild/sunos-x64',
+  'aix ppc64 BE': '@esbuild-try-operator-proposal/aix-ppc64',
+  'android arm64 LE': '@esbuild-try-operator-proposal/android-arm64',
+  'darwin arm64 LE': '@esbuild-try-operator-proposal/darwin-arm64',
+  'darwin x64 LE': '@esbuild-try-operator-proposal/darwin-x64',
+  'freebsd arm64 LE': '@esbuild-try-operator-proposal/freebsd-arm64',
+  'freebsd x64 LE': '@esbuild-try-operator-proposal/freebsd-x64',
+  'linux arm LE': '@esbuild-try-operator-proposal/linux-arm',
+  'linux arm64 LE': '@esbuild-try-operator-proposal/linux-arm64',
+  'linux ia32 LE': '@esbuild-try-operator-proposal/linux-ia32',
+  'linux mips64el LE': '@esbuild-try-operator-proposal/linux-mips64el',
+  'linux ppc64 LE': '@esbuild-try-operator-proposal/linux-ppc64',
+  'linux riscv64 LE': '@esbuild-try-operator-proposal/linux-riscv64',
+  'linux s390x BE': '@esbuild-try-operator-proposal/linux-s390x',
+  'linux x64 LE': '@esbuild-try-operator-proposal/linux-x64',
+  'linux loong64 LE': '@esbuild-try-operator-proposal/linux-loong64',
+  'netbsd arm64 LE': '@esbuild-try-operator-proposal/netbsd-arm64',
+  'netbsd x64 LE': '@esbuild-try-operator-proposal/netbsd-x64',
+  'openbsd arm64 LE': '@esbuild-try-operator-proposal/openbsd-arm64',
+  'openbsd x64 LE': '@esbuild-try-operator-proposal/openbsd-x64',
+  'sunos x64 LE': '@esbuild-try-operator-proposal/sunos-x64',
 }
 
 export const knownWebAssemblyFallbackPackages: Record<string, string> = {
-  'android arm LE': '@esbuild/android-arm',
-  'android x64 LE': '@esbuild/android-x64',
+  'android arm LE': '@esbuild-try-operator-proposal/android-arm',
+  'android x64 LE': '@esbuild-try-operator-proposal/android-x64',
 }
 
 export function pkgAndSubpathForCurrentPlatform(): { pkg: string, subpath: string, isWASM: boolean } {
@@ -61,17 +61,17 @@ export function pkgAndSubpathForCurrentPlatform(): { pkg: string, subpath: strin
 
   if (platformKey in knownWindowsPackages) {
     pkg = knownWindowsPackages[platformKey]
-    subpath = 'esbuild.exe'
+    subpath = 'esbuild-try-operator-proposal.exe'
   }
 
   else if (platformKey in knownUnixlikePackages) {
     pkg = knownUnixlikePackages[platformKey]
-    subpath = 'bin/esbuild'
+    subpath = 'bin/esbuild-try-operator-proposal'
   }
 
   else if (platformKey in knownWebAssemblyFallbackPackages) {
     pkg = knownWebAssemblyFallbackPackages[platformKey]
-    subpath = 'bin/esbuild'
+    subpath = 'bin/esbuild-try-operator-proposal'
     isWASM = true
   }
 
@@ -83,7 +83,7 @@ export function pkgAndSubpathForCurrentPlatform(): { pkg: string, subpath: strin
 }
 
 function pkgForSomeOtherPlatform(): string | null {
-  const libMainJS = require.resolve('esbuild')
+  const libMainJS = require.resolve('esbuild-try-operator-proposal')
   const nodeModulesDirectory = path.dirname(path.dirname(path.dirname(libMainJS)))
 
   if (path.basename(nodeModulesDirectory) === 'node_modules') {
@@ -108,7 +108,7 @@ function pkgForSomeOtherPlatform(): string | null {
 }
 
 export function downloadedBinPath(pkg: string, subpath: string): string {
-  const esbuildLibDir = path.dirname(require.resolve('esbuild'))
+  const esbuildLibDir = path.dirname(require.resolve('esbuild-try-operator-proposal'))
   return path.join(esbuildLibDir, `downloaded-${pkg.replace('/', '-')}-${path.basename(subpath)}`)
 }
 
@@ -274,7 +274,7 @@ for your current platform.`)
         root,
         'node_modules',
         '.cache',
-        'esbuild',
+        'esbuild-try-operator-proposal',
         `pnpapi-${pkg.replace('/', '-')}-${ESBUILD_VERSION}-${path.basename(subpath)}`,
       )
       if (!fs.existsSync(binTargetPath)) {

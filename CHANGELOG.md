@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.25.2-0.0.3
+
+* Fix some more things in the package process.
+
 ## 0.25.2-0.0.1
 
 * Implement try operator transformation with down-level support.

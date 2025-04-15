@@ -28,6 +28,7 @@
 /validate/
 /www
 bin
+!/npm/esbuild-wasm/bin
 esbuild.exe
 node_modules/
-/*.tgz
+esbuild-*.tgz

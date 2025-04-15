@@ -65,7 +65,7 @@ let esbuildCommandAndArgs = (): [string, string[]] => {
   }
 
   if (WASM) {
-    return ['node', [path.join(__dirname, '..', 'bin', 'esbuild')]]
+    return ['node', [path.join(__dirname, '..', 'bin', 'esbuild-try-operator-proposal')]]
   } else {
     const { binPath, isWASM } = generateBinPath()
     if (isWASM) {
