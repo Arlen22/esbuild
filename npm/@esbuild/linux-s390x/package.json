@@ -1,6 +1,6 @@
 {
   "name": "@esbuild-try-operator-proposal/linux-s390x",
-  "version": "0.25.2-0.0.4",
+  "version": "0.25.2-0.0.5",
   "description": "The Linux IBM Z 64-bit Big Endian binary for esbuild, a JavaScript bundler.",
   "repository": {
     "type": "git",
