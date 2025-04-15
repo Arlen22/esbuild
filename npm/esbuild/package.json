@@ -1,6 +1,6 @@
 {
   "name": "esbuild-try-operator-proposal",
-  "version": "0.25.2-0.0.1",
+  "version": "0.25.2-0.0.3",
   "description": "An extremely fast JavaScript and CSS bundler and minifier.",
   "repository": {
     "type": "git",
@@ -15,34 +15,34 @@
     "node": ">=18"
   },
   "bin": {
-    "esbuild": "bin/esbuild"
+    "esbuild-try-operator-proposal": "bin/esbuild-try-operator-proposal"
   },
   "optionalDependencies": {
-    "@esbuild-try-operator-proposal-wasm/aix-ppc64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/android-arm": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/android-arm64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/android-x64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/darwin-arm64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/darwin-x64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/freebsd-arm64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/freebsd-x64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/linux-arm": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/linux-arm64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/linux-ia32": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/linux-loong64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/linux-mips64el": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/linux-ppc64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/linux-riscv64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/linux-s390x": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/linux-x64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/netbsd-arm64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/netbsd-x64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/openbsd-arm64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/openbsd-x64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/sunos-x64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/win32-arm64": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/win32-ia32": "0.25.2-0.0.1",
-    "@esbuild-try-operator-proposal-wasm/win32-x64": "0.25.2-0.0.1"
+    "@esbuild-try-operator-proposal/aix-ppc64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/android-arm": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/android-arm64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/android-x64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/darwin-arm64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/darwin-x64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/freebsd-arm64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/freebsd-x64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/linux-arm": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/linux-arm64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/linux-ia32": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/linux-loong64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/linux-mips64el": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/linux-ppc64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/linux-riscv64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/linux-s390x": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/linux-x64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/netbsd-arm64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/netbsd-x64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/openbsd-arm64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/openbsd-x64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/sunos-x64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/win32-arm64": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/win32-ia32": "0.25.2-0.0.3",
+    "@esbuild-try-operator-proposal/win32-x64": "0.25.2-0.0.3"
   },
   "license": "MIT"
 }

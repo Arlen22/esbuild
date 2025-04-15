@@ -1,6 +1,6 @@
 {
   "name": "esbuild-try-operator-proposal-wasm",
-  "version": "0.25.2-0.0.1",
+  "version": "0.25.2-0.0.3",
   "description": "The cross-platform WebAssembly binary for esbuild, a JavaScript bundler.",
   "repository": {
     "type": "git",
