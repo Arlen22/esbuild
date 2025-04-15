@@ -1057,8 +1057,8 @@ func (p *parser) maybeLowerTryExpression(loc logger.Loc, e *js_ast.ETry) js_ast.
 				BlockLoc: loc,
 				Block: js_ast.SBlock{
 					Stmts: []js_ast.Stmt{
-						{Loc: loc, Data: &js_ast.SExpr{
-							Value: p.callRuntime(loc, "TryResultOk", []js_ast.Expr{
+						{Loc: loc, Data: &js_ast.SReturn{
+							ValueOrNil: p.callRuntime(loc, "TryResultOk", []js_ast.Expr{
 								e.Value,
 							}),
 						}},
@@ -1072,8 +1072,8 @@ func (p *parser) maybeLowerTryExpression(loc logger.Loc, e *js_ast.ETry) js_ast.
 					},
 					Block: js_ast.SBlock{
 						Stmts: []js_ast.Stmt{
-							{Loc: loc, Data: &js_ast.SExpr{
-								Value: p.callRuntime(loc, "TryResultError", []js_ast.Expr{
+							{Loc: loc, Data: &js_ast.SReturn{
+								ValueOrNil: p.callRuntime(loc, "TryResultError", []js_ast.Expr{
 									{Loc: loc, Data: &js_ast.EIdentifier{Ref: errorRef}},
 								}),
 							}},
