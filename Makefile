@@ -329,7 +329,7 @@ platform-win32-arm64: version-go
 
 platform-wasi-preview1: version-go
 	node scripts/esbuild.js npm/@esbuild/wasi-preview1/package.json --version
-	CGO_ENABLED=0 GOOS=wasip1 GOARCH=wasm go build $(GO_FLAGS) -o npm/@esbuild/wasi-preview1/esbuild-try-operator-proposal.wasm ./cmd/esbuild
+	CGO_ENABLED=0 GOOS=wasip1 GOARCH=wasm go build $(GO_FLAGS) -o npm/@esbuild/wasi-preview1/esbuild.wasm ./cmd/esbuild
 
 platform-unixlike: version-go
 	@test -n "$(GOOS)" || (echo "The environment variable GOOS must be provided" && false)
