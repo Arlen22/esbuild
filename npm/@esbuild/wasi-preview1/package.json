@@ -1,5 +1,5 @@
 {
-  "name": "@esbuild/wasi-preview1",
+  "name": "@esbuild-try-operator-proposal/wasi-preview1",
   "version": "0.25.2",
   "description": "The WASI (WebAssembly System Interface) preview 1 binary for esbuild, a JavaScript bundler.",
   "repository": {

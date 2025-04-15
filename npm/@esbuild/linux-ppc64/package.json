@@ -1,5 +1,5 @@
 {
-  "name": "@esbuild/linux-ppc64",
+  "name": "@esbuild-try-operator-proposal/linux-ppc64",
   "version": "0.25.2",
   "description": "The Linux PowerPC 64-bit Little Endian binary for esbuild, a JavaScript bundler.",
   "repository": {
